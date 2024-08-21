@@ -3,3 +3,5 @@
 
 # IntelliJ IDEA files
 /.idea/
+/.idea/*.xml
+workspace.xml
