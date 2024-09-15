@@ -3,6 +3,7 @@ package com.nus.edu.se.api_gateway.service;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.KeyGenerator;
@@ -18,6 +19,9 @@ import java.util.function.Function;
 
 @Component
 public class JwtUtil {
+
+    @Autowired
+    TokenBlacklistService tokenBlacklistService;
 
     private final String SECRET_KEY;
 
@@ -76,8 +80,7 @@ public class JwtUtil {
                 .compact();
     }
 
-    public Boolean validateToken(String token, String username) {
-        final String extractedUsername = extractUsername(token);
-        return (extractedUsername.equals(username) && !isTokenExpired(token));
+    public Boolean validateToken(String token) {
+        return  !isTokenExpired(token) && !tokenBlacklistService.isTokenBlacklisted(token);
     }
 }
